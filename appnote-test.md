@@ -1,9 +1,8 @@
-Abstract
-========
+# Abstract
 
 This application note contains the project that is used in the webinar
-"[How to get started with Arm Cortex-M55 software
-development](https://www.brighttalk.com/webcast/17792/386144)". It
+“[How to get started with Arm Cortex-M55 software
+development](https://www.brighttalk.com/webcast/17792/386144)”. It
 explains the project is explained in-depth and repeats the steps that
 were shown.
 
@@ -14,8 +13,7 @@ using optimized code on Arm Cortex-M55. The project can run on a Fixed
 Virtual Platform (FVP) model that is shipped with MDK v5.30, requiring
 an [MDK-Professional](http://www2.keil.com/mdk5/editions/pro) license.
 
-Contents {#contents .TOC-Heading}
-========
+# Contents
 
 [Abstract 1](#abstract)
 
@@ -35,14 +33,14 @@ Contents {#contents .TOC-Heading}
 
 [Targets 4](#targets)
 
-[FVP -- Scalar only implementation 5](#fvp-scalar-only-implementation)
+[FVP – Scalar only implementation 5](#fvp-scalar-only-implementation)
 
 [Code Coverage 5](#code-coverage)
 
 [M-Profile Vector Extension window
 7](#m-profile-vector-extension-window)
 
-[FVP -- Data type optimized vector implementation
+[FVP – Data type optimized vector implementation
 7](#fvp-data-type-optimized-vector-implementation)
 
 [MPS3 - Data type optimized vector implementation
@@ -52,7 +50,7 @@ Contents {#contents .TOC-Heading}
 
 [Performance Analyzer 10](#performance-analyzer)
 
-[MPS3 -- Reducing Execution Time Using Component Viewer
+[MPS3 – Reducing Execution Time Using Component Viewer
 11](#mps3-reducing-execution-time-using-component-viewer)
 
 [Variables.scvd 12](#variables.scvd)
@@ -63,8 +61,7 @@ Contents {#contents .TOC-Heading}
 
 [Appendix 13](#appendix)
 
-Introduction
-============
+# Introduction
 
 This application note explains how to implement four different versions
 of a multiply-accumulate function on Arm Cortex-M55. You will learn how
@@ -76,78 +73,74 @@ Finally, the application note quickly touches on the usage of MDK with
 the Arm MPS3 prototyping board that can host the netlist of Arm
 Cortex-M55 and that enables real code profiling using target hardware.
 
-Prerequisites
--------------
+## Prerequisites
 
 To run the project, you need to install the following software:
 
--   Install MDK v5.30 from
+  - Install MDK v5.30 from
     [www.keil.com/demo/eval/arm.htm](http://www.keil.com/demo/eval/arm.htm)
 
--   Add an MDK-Professional license. If you do not have access to this
+  - Add an MDK-Professional license. If you do not have access to this
     MDK edition, you can request a 30-day trial license from within the
     tool:
     [www.keil.com/support/man/docs/license/license\_eval.htm](http://www.keil.com/support/man/docs/license/license_eval.htm)
 
-Project Structure
-=================
+# Project Structure
 
 The project is configured for the Arm Cortex-M55 and has basically two
 source files:
 
--   main.c contains the main() function and calls the different
+  - main.c contains the main() function and calls the different
     implementations of the MLA function.
 
--   mla\_functions.S is an assembly file that contains the different MLA
+  - mla\_functions.S is an assembly file that contains the different MLA
     implementations
 
 The MLA implementations are as follows:
 
--   Scalar only MLA function implementation.
+  - Scalar only MLA function implementation.
 
--   Scalar MLA function implementation with low-overhead loops (LOL)
+  - Scalar MLA function implementation with low-overhead loops (LOL)
     (refer to Appendix).
 
--   Vectorized MLA function implementation with scalar code for loop
+  - Vectorized MLA function implementation with scalar code for loop
     tail prediction (refer to Appendix).
 
--   Vectorized MLA function implementation with low-overhead loops
+  - Vectorized MLA function implementation with low-overhead loops
     (refer to Appendix).
 
 The project also contains a custom scatter file (ARMC55\_ac6.sct) that
 is used to place one of the software components in an uninitialized part
-of the target's memory.
+of the target’s memory.
 
-Software Components
--------------------
+## Software Components
 
 Apart from the two source files, the project contains the following
 software components:
 
--   **::CMSIS:Core** for access to the Cortex-M55 header file
+  - **::CMSIS:Core** for access to the Cortex-M55 header file
 
--   **::Device:Startup** for startup and systems files
+  - **::Device:Startup** for startup and systems files
 
--   **::Compiler:Event Recorder** and **::Compiler:I/O:STDOUT:EVR** for
+  - **::Compiler:Event Recorder** and **::Compiler:I/O:STDOUT:EVR** for
     [retargeting the printf()
     output](http://www.keil.com/pack/doc/compiler/RetargetIO/html/_retarget__examples_er.html)
     to the **Debug (printf) Viewer** window
 
-main.c
-------
+## main.c
 
 In main.c, we first include a couple of required header files. The
 EventRecorder.h file is only included if the component is present (which
 is noted in RTE\_Components.h). This will be used in the last step when
-we remove the component and thus don't want to include its header file:
+we remove the component and thus don’t want to include its header file:
 
-\#include \"RTE\_Components.h\"
+\#include "RTE\_Components.h"
 
 \#include CMSIS\_device\_header
 
 \#ifdef RTE\_Compiler\_EventRecorder
 
-  \#include \"EventRecorder.h\" // Keil.ARM Compiler::Compiler:Event Recorder
+  \#include "EventRecorder.h" // Keil.ARM Compiler::Compiler:Event Recorder
 
 \#endif
 
@@ -244,32 +237,30 @@ int main(void) {
 
 \#ifdef RTE\_Compiler\_EventRecorder
 
-  printf(\"Scalar only          : Result = %d, Cycles = %d\\n\", sca\_result, scalar\_cycle\_count);
+  printf("Scalar only          : Result = %d, Cycles = %d\\n", sca\_result, scalar\_cycle\_count);
 
 \#endif
 
-mla\_functions.S
-----------------
+## mla\_functions.S
 
-The capital "S" in the file extension indicates to the Arm assembler
+The capital “S” in the file extension indicates to the Arm assembler
 that the file requires preprocessing as it contains a couple of
 \#ifndefs that are used to steer the selected implementation. To see the
 best result of each implementation, you need to set the following
-\#defines in the **Options for Target -- C/C++ (AC6) and Asm** tabs:
+\#defines in the **Options for Target – C/C++ (AC6) and Asm** tabs:
 
-  **Result of**     **C/C++ (AC6) tab**   **Asm tab**
-  ----------------- --------------------- -------------
-  Scalar only                             PLAIN
-  Scalar LOL                              SCALOL
-  Vector LOL                              VECLOL
-  Optimized types   DATATYPE              DATATYPE
+| **Result of**   | **C/C++ (AC6) tab** | **Asm tab** |
+| --------------- | ------------------- | ----------- |
+| Scalar only     |                     | PLAIN       |
+| Scalar LOL      |                     | SCALOL      |
+| Vector LOL      |                     | VECLOL      |
+| Optimized types | DATATYPE            | DATATYPE    |
 
 The last one uses different data types than the others (also in main.c).
 Instead of 32-bit integers, 16-bit fixed-point values are used that
 enable higher throughput in a single iteration.
 
-Running the project
-===================
+# Running the project
 
 This section explains a couple of ways to execute the application in
 simulation or on real hardware. It also shows how to use MDK to debug
@@ -280,50 +271,44 @@ The project ZIP file is available for download on
 Download the ZIP file, unzip it, and double-click the Cortex-M55.uvprojx
 file to open it in µVision.
 
-Targets
--------
+## Targets
 
 The project supports two targets:
 
--   **FVP**: The project runs in simulation using the Cortex-M55 FVP
+  - **FVP**: The project runs in simulation using the Cortex-M55 FVP
     that is delivered with MDK. An FVP is useful for prototyping as it
     gives an indication about code performance. However, it does not
     give accurate measurements.
 
--   **MPS3**: The project connects to a Cortex-M55 FPGA image running on
+  - **MPS3**: The project connects to a Cortex-M55 FPGA image running on
     the MPS3 prototyping platform. Using a hardware implementation gives
     you accurate code performance measurements.
 
-```{=html}
-<!-- -->
-```
--   Note: General information on how to use Fixed Virtual Platforms in
+<!-- end list -->
+
+  - Note: General information on how to use Fixed Virtual Platforms in
     MDK can be found here:
     [www.keil.com/support/man/docs/fstmdls/](http://www.keil.com/support/man/docs/fstmdls/)
 
-FVP -- Scalar only implementation
----------------------------------
+## FVP – Scalar only implementation
 
 First, we need to tell the assembler to use the right implementation. Go
-to ![](./myMediaFolderc/media/image2.png){width="0.16664588801399824in"
-height="0.15623031496062992in"} **Options for Target -- Asm** (Atl+F7)
-and enter PLAIN in the **Define:** section:
+to ![](./myMediaFolderc/media/image2.png) **Options for Target – Asm**
+(Atl+F7) and enter PLAIN in the **Define:** section:
 
-![](./myMediaFolderc/media/image3.png){width="6.520018591426072in"
-height="1.2706747594050745in"}
+![](./myMediaFolderc/media/image3.png)
 
 ![](./myMediaFolderc/media/image4.png) **Build** (F7) the project and
-![](./myMediaFolderc/media/image5.png){width="0.16664588801399824in"
-height="0.15623031496062992in"} **Start a Debug Session** (Ctrl + F5).
-You will see two windows opening in the background -- these are issued
-by the Fast Model and must not be closed during the debug session.
+![](./myMediaFolderc/media/image5.png) **Start a Debug Session** (Ctrl +
+F5). You will see two windows opening in the background – these are
+issued by the Fast Model and must not be closed during the debug
+session.
 
 ![](./myMediaFolderc/media/image6.png) **Run** (F5) the application. It
 will hit a breakpoint at the end on the while(1) loop. Observe the
 output of the printf() calls in the **Debug (printf) Viewer** window:
 
-![](./myMediaFolderc/media/image7.png){width="4.863975284339458in"
-height="1.531058617672791in"}
+![](./myMediaFolderc/media/image7.png)
 
 Note that the cycles do not have to match to your output, but the
 general relation should be correct.
@@ -335,8 +320,7 @@ general relation should be correct.
 display of your code has changed. It now contains code coverage
 markings:
 
-![](./myMediaFolderc/media/image9.png){width="7.0in"
-height="3.2111111111111112in"}
+![](./myMediaFolderc/media/image9.png)
 
 This is due to a new feature in MDK v5.30 that allows to extract
 coverage information from an FVP. Unfortunately, this cannot be shown
@@ -344,13 +328,10 @@ live in a debug session, but needs to be loaded when entering debug.
 
 In the **Models ARMv8-M Target Driver Setup** dialog, you can specify to
 save the coverage information and to load a recorded coverage info on
-debug entry
-(![](./myMediaFolderc/media/image2.png){width="0.16664588801399824in"
-height="0.15623031496062992in"} **Options for Target -- Debug --
-Settings** (Alt+F7)):
+debug entry (![](./myMediaFolderc/media/image2.png) **Options for Target
+– Debug – Settings** (Alt+F7)):
 
-![](./myMediaFolderc/media/image10.png){width="6.9678794838145235in"
-height="4.728575021872266in"}
+![](./myMediaFolderc/media/image10.png)
 
 In a debug session with the data loaded from the previous run, you can
 use the COVERAGE command to store the coverage information in
@@ -359,27 +340,25 @@ useful for CI/CD environments where your server can run automated
 testing and create coverage information based on GCOV. Enter the
 following in the **Command** window:
 
-![](./myMediaFolderc/media/image11.png){width="6.061742125984252in"
-height="1.6247965879265092in"}
+![](./myMediaFolderc/media/image11.png)
 
 The Gcov files (one for each module) will be saved in the directory
 where the objects are stored. You can use a tool like
 [gcovr](https://gcovr.com/en/stable/) to create a HTML table showing the
-project's overall code coverage.
+project’s overall code coverage.
 
 ### M-Profile Vector Extension window
 
-MDK v5.30 introduces a new System Viewer window -- the [**M-Profile
+MDK v5.30 introduces a new System Viewer window – the [**M-Profile
 Vector
 Extension**](http://www.keil.com/support/man/docs/uv4/uv4_cp_armv81mml_mve.htm)
 window. This window allows you to check the MVE vector registers.
 
-![](./myMediaFolderc/media/image12.png) Go to **View -- System Analyzer
--- Core Peripherals -- M-Profile Vector Extension (MVE)** to open the
+![](./myMediaFolderc/media/image12.png) Go to **View – System Analyzer –
+Core Peripherals – M-Profile Vector Extension (MVE)** to open the
 dialog:
 
-![](./myMediaFolderc/media/image13.png){width="7.0in"
-height="2.261111111111111in"}
+![](./myMediaFolderc/media/image13.png)
 
 The **Vectors** area displays the values of vectors Q0 - Q7. The
 Cortex-M55 works in parallel on 2 x 64-bit vectors. You can configure
@@ -389,8 +368,7 @@ see the content of the vector register in int, float, or even q number
 format. This makes it easy to verify the correct operation of your
 application.
 
-FVP -- Data type optimized vector implementation
-------------------------------------------------
+## FVP – Data type optimized vector implementation
 
 To see the best performance of the MLA algorithm, we need not only to
 use an optimized variant, but also change the data type. When creating
@@ -401,40 +379,30 @@ with MVE, this means up to eight different elements can be processed in
 a single iteration of a loop.
 
 To examine the impact on performance of switching to use a smaller data
-type, define DATATYPE in the\
-![](./myMediaFolderc/media/image2.png){width="0.16664588801399824in"
-height="0.15623031496062992in"} **Options for Target -- Asm** (Atl+F7)
-**Define:** section and
-![](./myMediaFolderc/media/image2.png){width="0.16664588801399824in"
-height="0.15623031496062992in"} **Options for Target -- C/C++ (AC6)
-Define:** section:
+type, define DATATYPE in the  
+![](./myMediaFolderc/media/image2.png) **Options for Target – Asm**
+(Atl+F7) **Define:** section and ![](./myMediaFolderc/media/image2.png)
+**Options for Target – C/C++ (AC6) Define:** section:
 
-![](./myMediaFolderc/media/image14.png){width="6.520018591426072in"
-height="1.645627734033246in"}
+![](./myMediaFolderc/media/image14.png)
 
-![](./myMediaFolderc/media/image15.png){width="6.520018591426072in"
-height="1.645627734033246in"}
+![](./myMediaFolderc/media/image15.png)
 
 ![](./myMediaFolderc/media/image16.png) **Rebuild** the project,
-![](./myMediaFolderc/media/image5.png){width="0.16664588801399824in"
-height="0.15623031496062992in"} **Start a Debug Session** (Ctrl + F5),
-and
-![](./myMediaFolderc/media/image17.png){width="0.16666666666666666in"
-height="0.15625in"} **Run** (F5) the application. You should see results
-like the following ones:
+![](./myMediaFolderc/media/image5.png) **Start a Debug Session** (Ctrl +
+F5), and ![](./myMediaFolderc/media/image17.png) **Run** (F5) the
+application. You should see results like the following ones:
 
-![](./myMediaFolderc/media/image18.png){width="4.863975284339458in"
-height="1.5206430446194226in"}
+![](./myMediaFolderc/media/image18.png)
 
 Comparing the different results, we see that an optimized implementation
 of an algorithm with the right selection of the variable data types can
 increase performance significantly. In our case, the Vector + LOL
 version is more than 6.5 times faster than the simple scalar
-implementation. Let's see how the numbers are on a real hardware
+implementation. Let’s see how the numbers are on a real hardware
 implementation in an FPGA.
 
-MPS3 - Data type optimized vector implementation
-------------------------------------------------
+## MPS3 - Data type optimized vector implementation
 
 For this next part, you need to have access to the [Arm MPS3 FPGA
 Prototyping
@@ -459,24 +427,19 @@ that you can use for code coverage and profiling.
 
 In µVision, switch the target to **MPS3**:
 
-![](./myMediaFolderc/media/image19.png){width="4.1765616797900265in"
-height="1.5414741907261593in"}
+![](./myMediaFolderc/media/image19.png)
 
 Make sure that the define DATATYPE is still set on the **C/C++ (AC6)**
 and **Asm** tabs.
 
-![](./myMediaFolderc/media/image20.png){width="0.16666666666666666in"
-height="0.15625in"} **Build** (F7) the project,
-![](./myMediaFolderc/media/image5.png){width="0.16664588801399824in"
-height="0.15623031496062992in"} **Start a Debug Session** (Ctrl + F5),
-and
-![](./myMediaFolderc/media/image17.png){width="0.16666666666666666in"
-height="0.15625in"} **Run** (F5) the application. It will hit a
-breakpoint at the end on the while(1) loop. Observe the output of the
-printf() calls in the **Debug (printf) Viewer** window:
+![](./myMediaFolderc/media/image20.png) **Build** (F7) the project,
+![](./myMediaFolderc/media/image5.png) **Start a Debug Session** (Ctrl +
+F5), and ![](./myMediaFolderc/media/image17.png) **Run** (F5) the
+application. It will hit a breakpoint at the end on the while(1) loop.
+Observe the output of the printf() calls in the **Debug (printf)
+Viewer** window:
 
-![](./myMediaFolderc/media/image21.png){width="4.863975284339458in"
-height="1.5414741907261593in"}
+![](./myMediaFolderc/media/image21.png)
 
 Notice that the Vector + LOL implementation needs more cycles than
 estimated with the model, but the relation to the Scalar implementation
@@ -490,8 +453,7 @@ you run through it. This is an advantage when using real hardware. You
 can also use the **Code Coverage** window to check the coverage for each
 module/function:
 
-![](./myMediaFolderc/media/image22.png){width="5.645127952755906in"
-height="5.280589457567804in"}
+![](./myMediaFolderc/media/image22.png)
 
 As before, you can write coverage information to a Gcov file for further
 processing.
@@ -505,11 +467,10 @@ to record and display execution times for functions and program blocks.
 It shows the processor cycle usage and enables you to identify
 algorithms that require optimization.
 
-![](./myMediaFolderc/media/image23.png) Go to **View -- Analysis Windows
--- Performance Analyzer** to open the window:
+![](./myMediaFolderc/media/image23.png) Go to **View – Analysis Windows
+– Performance Analyzer** to open the window:
 
-![](./myMediaFolderc/media/image24.png){width="7.0in"
-height="5.0777777777777775in"}
+![](./myMediaFolderc/media/image24.png)
 
 The following is quite interesting:
 
@@ -527,21 +488,17 @@ Putting all together, we can see that in such a simple project, the
 dominating factor is printing the output to a console. In the next
 section, we will see how we can improve this.
 
-MPS3 -- Reducing Execution Time Using Component Viewer
-------------------------------------------------------
+## MPS3 – Reducing Execution Time Using Component Viewer
 
 ![](./myMediaFolderc/media/image8.png) **Stop the Debug Session** (Ctrl
-+ F5) and open the
-![](./myMediaFolderc/media/image25.png){width="0.16664588801399824in"
-height="0.15623031496062992in"} **Manage Run-Time Environment** window.
-Disable the following components:
++ F5) and open the ![](./myMediaFolderc/media/image25.png) **Manage
+Run-Time Environment** window. Disable the following components:
 
--   **::Compiler:Event Recorder**
+  - **::Compiler:Event Recorder**
 
--   **::Compiler:I/O:STDOUT**
+  - **::Compiler:I/O:STDOUT**
 
-![](./myMediaFolderc/media/image26.png){width="5.051452318460193in"
-height="2.3434569116360455in"}
+![](./myMediaFolderc/media/image26.png)
 
 Click **OK** to close the window.
 
@@ -549,29 +506,25 @@ In main.c, you immediately see that the relevant code will not be used
 as the RTE\_Component.h file does not contain the define
 RTE\_Compiler\_EventRecorder anymore:
 
-![](./myMediaFolderc/media/image27.png){width="7.0in"
-height="2.8722222222222222in"}
+![](./myMediaFolderc/media/image27.png)
 
 Instead of using printf() for displaying the variables, you could add
 them to the
 [**Watch**](http://www.keil.com/support/man/docs/uv4/uv4_db_dbg_watchwin.htm)
 window, but this requires the variables to be in scope and does not
-render nicely (the variable name and value is shown, that's it). Another
+render nicely (the variable name and value is shown, that’s it). Another
 option is to use [**Component
 Viewer**](http://www.keil.com/support/man/docs/uv4/uv4_db_dbg_scvd_viewer.htm)
 to create your own window to view to the variables by just adding a
 simple XML file to the project.
 
-Go to
-![](./myMediaFolderc/media/image2.png){width="0.16664588801399824in"
-height="0.15623031496062992in"} **Options for Target -- Debug** (Atl+F7)
-and click **Manage Component Viewer Description Files ...** at the
-bottom of the dialog. In the next window, click **Add Component Viewer
-Description File** and browse to the file Variables.scvd in the project
-directory, and click **Add**:
+Go to ![](./myMediaFolderc/media/image2.png) **Options for Target –
+Debug** (Atl+F7) and click **Manage Component Viewer Description Files
+…** at the bottom of the dialog. In the next window, click **Add
+Component Viewer Description File** and browse to the file
+Variables.scvd in the project directory, and click **Add**:
 
-![](./myMediaFolderc/media/image28.png){width="6.894971566054243in"
-height="1.7393657042869641in"}
+![](./myMediaFolderc/media/image28.png)
 
 Click **OK** twice.
 
@@ -579,33 +532,33 @@ Click **OK** twice.
 
 Here is the content of the SCVD file:
 
-\<?xml version=\"1.0\" encoding=\"utf-8\"?\>
+\<?xml version="1.0" encoding="utf-8"?\>
 
-\<component\_viewer schemaVersion=\"0.1\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\" xs:noNamespaceSchemaLocation=\"Component\_Viewer.xsd\"\>
+\<component\_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component\_Viewer.xsd"\>
 
-\<component name=\"MyVars\" version=\"1.0.0\"/\>
+\<component name="MyVars" version="1.0.0"/\>
 
   \<objects\>
 
-    \<object name=\"MyVars\"\>
+    \<object name="MyVars"\>
 
-      \<read name=\"SCNT\"  type=\"uint32\_t\" symbol=\"scalar\_cycle\_count\"/\>
+      \<read name="SCNT"  type="uint32\_t" symbol="scalar\_cycle\_count"/\>
 
-      \<read name=\"SLCNT\" type=\"uint32\_t\" symbol=\"scalar\_lol\_cycle\_count\"/\>
+      \<read name="SLCNT" type="uint32\_t" symbol="scalar\_lol\_cycle\_count"/\>
 
-      \<read name=\"VSCNT\" type=\"uint32\_t\" symbol=\"vector\_scalar\_cycle\_count\"/\>
+      \<read name="VSCNT" type="uint32\_t" symbol="vector\_scalar\_cycle\_count"/\>
 
-      \<read name=\"VLCNT\" type=\"uint32\_t\" symbol=\"vector\_lol\_cycle\_count\"/\>
+      \<read name="VLCNT" type="uint32\_t" symbol="vector\_lol\_cycle\_count"/\>
 
-      \<out name=\"Cycle Counts\"\>
+      \<out name="Cycle Counts"\>
 
-        \<item property=\"Scalar Cycle Count\"                      value=\"%d\[SCNT\]\" /\>
+        \<item property="Scalar Cycle Count"                      value="%d\[SCNT\]" /\>
 
-        \<item property=\"Scalar Low-overhead-loop Cycle Count\"    value=\"%d\[SLCNT\]\"/\>
+        \<item property="Scalar Low-overhead-loop Cycle Count"    value="%d\[SLCNT\]"/\>
 
-        \<item property=\"Vectorized Scalar Cycle Count\"           value=\"%d\[VSCNT\]\"/\>
+        \<item property="Vectorized Scalar Cycle Count"           value="%d\[VSCNT\]"/\>
 
-        \<item property=\"Vectorized Low-overhead-loopCycle Count\" value=\"%d\[VLCNT\]\"/\>
+        \<item property="Vectorized Low-overhead-loopCycle Count" value="%d\[VLCNT\]"/\>
 
       \</out\>
 
@@ -623,26 +576,21 @@ formatting).
 ### Results
 
 ![](./myMediaFolderc/media/image16.png) **Rebuild** the project,
-![](./myMediaFolderc/media/image5.png){width="0.16664588801399824in"
-height="0.15623031496062992in"} **Start a Debug Session** (Ctrl + F5)
-and go to **View -- Watch Windows -- Cycle Counts** to open the
-Component Viewer window.
-![](./myMediaFolderc/media/image17.png){width="0.16666666666666666in"
-height="0.15625in"} **Run** (F5) the application. The **Cycle Counts**
-window shows the following results:
+![](./myMediaFolderc/media/image5.png) **Start a Debug Session** (Ctrl +
+F5) and go to **View – Watch Windows – Cycle Counts** to open the
+Component Viewer window. ![](./myMediaFolderc/media/image17.png) **Run**
+(F5) the application. The **Cycle Counts** window shows the following
+results:
 
-![](./myMediaFolderc/media/image29.png){width="4.572344706911636in"
-height="1.2915048118985126in"}
+![](./myMediaFolderc/media/image29.png)
 
 **Performance Analyzer** now shows a different picture:
-![](./myMediaFolderc/media/image30.png){width="6.217972440944882in"
-height="1.7601968503937009in"}
+![](./myMediaFolderc/media/image30.png)
 
 Using a less invasive method of reading the variables, we could reduce
 the overall run-time of the application drastically.
 
-Summary
-=======
+# Summary
 
 This application note showed how you can use the Fixed Virtual Platforms
 (FVPs) that are shipped with Arm Keil MDK to start early prototyping of
@@ -654,8 +602,7 @@ It was also shown that using a prototyping board, advanced features of
 Arm Keil MDK help you to profile your application further and how these
 features can help to reduce the overall run-time of the program.
 
-Appendix
-========
+# Appendix
 
 Here are some useful resources regarding the Armv8.1-M architecture:
 
