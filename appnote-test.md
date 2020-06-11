@@ -305,24 +305,24 @@ FVP -- Scalar only implementation
 ---------------------------------
 
 First, we need to tell the assembler to use the right implementation. Go
-to ![](media/image2.png){width="0.16664588801399824in"
+to ![](./myMediaFolderc/media/image2.png){width="0.16664588801399824in"
 height="0.15623031496062992in"} **Options for Target -- Asm** (Atl+F7)
 and enter PLAIN in the **Define:** section:
 
-![](media/image3.png){width="6.520018591426072in"
+![](./myMediaFolderc/media/image3.png){width="6.520018591426072in"
 height="1.2706747594050745in"}
 
-![](media/image4.png) **Build** (F7) the project and
-![](media/image5.png){width="0.16664588801399824in"
+![](./myMediaFolderc/media/image4.png) **Build** (F7) the project and
+![](./myMediaFolderc/media/image5.png){width="0.16664588801399824in"
 height="0.15623031496062992in"} **Start a Debug Session** (Ctrl + F5).
 You will see two windows opening in the background -- these are issued
 by the Fast Model and must not be closed during the debug session.
 
-![](media/image6.png) **Run** (F5) the application. It will hit a
-breakpoint at the end on the while(1) loop. Observe the output of the
-printf() calls in the **Debug (printf) Viewer** window:
+![](./myMediaFolderc/media/image6.png) **Run** (F5) the application. It
+will hit a breakpoint at the end on the while(1) loop. Observe the
+output of the printf() calls in the **Debug (printf) Viewer** window:
 
-![](media/image7.png){width="4.863975284339458in"
+![](./myMediaFolderc/media/image7.png){width="4.863975284339458in"
 height="1.531058617672791in"}
 
 Note that the cycles do not have to match to your output, but the
@@ -330,11 +330,13 @@ general relation should be correct.
 
 ### Code Coverage
 
-![](media/image8.png) **Stop the Debug Session** (Ctrl + F5) and restart
-it immediately afterwards. You will notice that the display of your code
-has changed. It now contains code coverage markings:
+![](./myMediaFolderc/media/image8.png) **Stop the Debug Session** (Ctrl
++ F5) and restart it immediately afterwards. You will notice that the
+display of your code has changed. It now contains code coverage
+markings:
 
-![](media/image9.png){width="7.0in" height="3.2111111111111112in"}
+![](./myMediaFolderc/media/image9.png){width="7.0in"
+height="3.2111111111111112in"}
 
 This is due to a new feature in MDK v5.30 that allows to extract
 coverage information from an FVP. Unfortunately, this cannot be shown
@@ -342,11 +344,12 @@ live in a debug session, but needs to be loaded when entering debug.
 
 In the **Models ARMv8-M Target Driver Setup** dialog, you can specify to
 save the coverage information and to load a recorded coverage info on
-debug entry (![](media/image2.png){width="0.16664588801399824in"
+debug entry
+(![](./myMediaFolderc/media/image2.png){width="0.16664588801399824in"
 height="0.15623031496062992in"} **Options for Target -- Debug --
 Settings** (Alt+F7)):
 
-![](media/image10.png){width="6.9678794838145235in"
+![](./myMediaFolderc/media/image10.png){width="6.9678794838145235in"
 height="4.728575021872266in"}
 
 In a debug session with the data loaded from the previous run, you can
@@ -356,7 +359,7 @@ useful for CI/CD environments where your server can run automated
 testing and create coverage information based on GCOV. Enter the
 following in the **Command** window:
 
-![](media/image11.png){width="6.061742125984252in"
+![](./myMediaFolderc/media/image11.png){width="6.061742125984252in"
 height="1.6247965879265092in"}
 
 The Gcov files (one for each module) will be saved in the directory
@@ -371,10 +374,12 @@ Vector
 Extension**](http://www.keil.com/support/man/docs/uv4/uv4_cp_armv81mml_mve.htm)
 window. This window allows you to check the MVE vector registers.
 
-![](media/image12.png) Go to **View -- System Analyzer -- Core
-Peripherals -- M-Profile Vector Extension (MVE)** to open the dialog:
+![](./myMediaFolderc/media/image12.png) Go to **View -- System Analyzer
+-- Core Peripherals -- M-Profile Vector Extension (MVE)** to open the
+dialog:
 
-![](media/image13.png){width="7.0in" height="2.261111111111111in"}
+![](./myMediaFolderc/media/image13.png){width="7.0in"
+height="2.261111111111111in"}
 
 The **Vectors** area displays the values of vectors Q0 - Q7. The
 Cortex-M55 works in parallel on 2 x 64-bit vectors. You can configure
@@ -397,27 +402,28 @@ a single iteration of a loop.
 
 To examine the impact on performance of switching to use a smaller data
 type, define DATATYPE in the\
-![](media/image2.png){width="0.16664588801399824in"
+![](./myMediaFolderc/media/image2.png){width="0.16664588801399824in"
 height="0.15623031496062992in"} **Options for Target -- Asm** (Atl+F7)
 **Define:** section and
-![](media/image2.png){width="0.16664588801399824in"
+![](./myMediaFolderc/media/image2.png){width="0.16664588801399824in"
 height="0.15623031496062992in"} **Options for Target -- C/C++ (AC6)
 Define:** section:
 
-![](media/image14.png){width="6.520018591426072in"
+![](./myMediaFolderc/media/image14.png){width="6.520018591426072in"
 height="1.645627734033246in"}
 
-![](media/image15.png){width="6.520018591426072in"
+![](./myMediaFolderc/media/image15.png){width="6.520018591426072in"
 height="1.645627734033246in"}
 
-![](media/image16.png) **Rebuild** the project,
-![](media/image5.png){width="0.16664588801399824in"
+![](./myMediaFolderc/media/image16.png) **Rebuild** the project,
+![](./myMediaFolderc/media/image5.png){width="0.16664588801399824in"
 height="0.15623031496062992in"} **Start a Debug Session** (Ctrl + F5),
-and ![](media/image17.png){width="0.16666666666666666in"
+and
+![](./myMediaFolderc/media/image17.png){width="0.16666666666666666in"
 height="0.15625in"} **Run** (F5) the application. You should see results
 like the following ones:
 
-![](media/image18.png){width="4.863975284339458in"
+![](./myMediaFolderc/media/image18.png){width="4.863975284339458in"
 height="1.5206430446194226in"}
 
 Comparing the different results, we see that an optimized implementation
@@ -453,22 +459,23 @@ that you can use for code coverage and profiling.
 
 In µVision, switch the target to **MPS3**:
 
-![](media/image19.png){width="4.1765616797900265in"
+![](./myMediaFolderc/media/image19.png){width="4.1765616797900265in"
 height="1.5414741907261593in"}
 
 Make sure that the define DATATYPE is still set on the **C/C++ (AC6)**
 and **Asm** tabs.
 
-![](media/image20.png){width="0.16666666666666666in" height="0.15625in"}
-**Build** (F7) the project,
-![](media/image5.png){width="0.16664588801399824in"
+![](./myMediaFolderc/media/image20.png){width="0.16666666666666666in"
+height="0.15625in"} **Build** (F7) the project,
+![](./myMediaFolderc/media/image5.png){width="0.16664588801399824in"
 height="0.15623031496062992in"} **Start a Debug Session** (Ctrl + F5),
-and ![](media/image17.png){width="0.16666666666666666in"
+and
+![](./myMediaFolderc/media/image17.png){width="0.16666666666666666in"
 height="0.15625in"} **Run** (F5) the application. It will hit a
 breakpoint at the end on the while(1) loop. Observe the output of the
 printf() calls in the **Debug (printf) Viewer** window:
 
-![](media/image21.png){width="4.863975284339458in"
+![](./myMediaFolderc/media/image21.png){width="4.863975284339458in"
 height="1.5414741907261593in"}
 
 Notice that the Vector + LOL implementation needs more cycles than
@@ -483,7 +490,7 @@ you run through it. This is an advantage when using real hardware. You
 can also use the **Code Coverage** window to check the coverage for each
 module/function:
 
-![](media/image22.png){width="5.645127952755906in"
+![](./myMediaFolderc/media/image22.png){width="5.645127952755906in"
 height="5.280589457567804in"}
 
 As before, you can write coverage information to a Gcov file for further
@@ -498,10 +505,11 @@ to record and display execution times for functions and program blocks.
 It shows the processor cycle usage and enables you to identify
 algorithms that require optimization.
 
-![](media/image23.png) Go to **View -- Analysis Windows -- Performance
-Analyzer** to open the window:
+![](./myMediaFolderc/media/image23.png) Go to **View -- Analysis Windows
+-- Performance Analyzer** to open the window:
 
-![](media/image24.png){width="7.0in" height="5.0777777777777775in"}
+![](./myMediaFolderc/media/image24.png){width="7.0in"
+height="5.0777777777777775in"}
 
 The following is quite interesting:
 
@@ -522,8 +530,9 @@ section, we will see how we can improve this.
 MPS3 -- Reducing Execution Time Using Component Viewer
 ------------------------------------------------------
 
-![](media/image8.png) **Stop the Debug Session** (Ctrl + F5) and open
-the ![](media/image25.png){width="0.16664588801399824in"
+![](./myMediaFolderc/media/image8.png) **Stop the Debug Session** (Ctrl
++ F5) and open the
+![](./myMediaFolderc/media/image25.png){width="0.16664588801399824in"
 height="0.15623031496062992in"} **Manage Run-Time Environment** window.
 Disable the following components:
 
@@ -531,7 +540,7 @@ Disable the following components:
 
 -   **::Compiler:I/O:STDOUT**
 
-![](media/image26.png){width="5.051452318460193in"
+![](./myMediaFolderc/media/image26.png){width="5.051452318460193in"
 height="2.3434569116360455in"}
 
 Click **OK** to close the window.
@@ -540,7 +549,8 @@ In main.c, you immediately see that the relevant code will not be used
 as the RTE\_Component.h file does not contain the define
 RTE\_Compiler\_EventRecorder anymore:
 
-![](media/image27.png){width="7.0in" height="2.8722222222222222in"}
+![](./myMediaFolderc/media/image27.png){width="7.0in"
+height="2.8722222222222222in"}
 
 Instead of using printf() for displaying the variables, you could add
 them to the
@@ -552,14 +562,15 @@ Viewer**](http://www.keil.com/support/man/docs/uv4/uv4_db_dbg_scvd_viewer.htm)
 to create your own window to view to the variables by just adding a
 simple XML file to the project.
 
-Go to ![](media/image2.png){width="0.16664588801399824in"
+Go to
+![](./myMediaFolderc/media/image2.png){width="0.16664588801399824in"
 height="0.15623031496062992in"} **Options for Target -- Debug** (Atl+F7)
 and click **Manage Component Viewer Description Files ...** at the
 bottom of the dialog. In the next window, click **Add Component Viewer
 Description File** and browse to the file Variables.scvd in the project
 directory, and click **Add**:
 
-![](media/image28.png){width="6.894971566054243in"
+![](./myMediaFolderc/media/image28.png){width="6.894971566054243in"
 height="1.7393657042869641in"}
 
 Click **OK** twice.
@@ -611,20 +622,20 @@ formatting).
 
 ### Results
 
-![](media/image16.png) **Rebuild** the project,
-![](media/image5.png){width="0.16664588801399824in"
+![](./myMediaFolderc/media/image16.png) **Rebuild** the project,
+![](./myMediaFolderc/media/image5.png){width="0.16664588801399824in"
 height="0.15623031496062992in"} **Start a Debug Session** (Ctrl + F5)
 and go to **View -- Watch Windows -- Cycle Counts** to open the
 Component Viewer window.
-![](media/image17.png){width="0.16666666666666666in" height="0.15625in"}
-**Run** (F5) the application. The **Cycle Counts** window shows the
-following results:
+![](./myMediaFolderc/media/image17.png){width="0.16666666666666666in"
+height="0.15625in"} **Run** (F5) the application. The **Cycle Counts**
+window shows the following results:
 
-![](media/image29.png){width="4.572344706911636in"
+![](./myMediaFolderc/media/image29.png){width="4.572344706911636in"
 height="1.2915048118985126in"}
 
 **Performance Analyzer** now shows a different picture:
-![](media/image30.png){width="6.217972440944882in"
+![](./myMediaFolderc/media/image30.png){width="6.217972440944882in"
 height="1.7601968503937009in"}
 
 Using a less invasive method of reading the variables, we could reduce
