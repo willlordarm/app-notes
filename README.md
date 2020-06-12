@@ -1,6 +1,6 @@
 # Converting app notes from docx to markdown
 
-1. Find a .docx file in the app-notes repo (or somewhere - include images)
+1. Find a .docx file in the app-notes repo (or somewhere - one that includes images and some applied styles)
 
 2. Install pandoc
 
